@@ -29,14 +29,14 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 DEBUG = os.environ.get("DEBUG","False")=="True"
 
 ALLOWED_HOSTS = [
-    os.environ.get('ALLOWED_HOST'),
+    os.environ.get('ALLOWED_ORIGIN'),
     "127.0.0.1",
     'corsheaders',
 ]
 
 # Application definition
 CORS_ALLOWED_ORIGINS = [
-    os.environ.get('ALLOWED_HOST'),
+    os.environ.get('CORS_ALLOWED_ORIGIN'),
 ]
 
 INSTALLED_APPS = [
