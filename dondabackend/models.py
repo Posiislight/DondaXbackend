@@ -19,3 +19,10 @@ class MotorcycleOrder(models.Model):
 
     def __str__(self):
         return f"Order #{self.id} by {self.first_name} {self.last_name}"
+
+class EmailList(models.Model):
+    email:models.EmailField()
+    joined_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Email {self.id} is {self.email}"

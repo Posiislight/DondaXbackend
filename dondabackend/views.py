@@ -1,7 +1,7 @@
 from tokenize import Octnumber
 from django.shortcuts import render
-from .models import MotorcycleOrder
-from .serializers import MotorcycleOrderSerializer
+from .models import MotorcycleOrder,EmailList
+from .serializers import MotorcycleOrderSerializer,EmailListSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.core.mail import send_mail
@@ -53,9 +53,19 @@ Submitted on: {order.created_at.strftime('%Y-%m-%d %H:%M:%S')}
                         fail_silently=False,
                     )
                 except Exception as e:
-                    
+                    print("smtp error")
                     return Response(serializer.errors,status=401)
                 return Response(serializer.data, status=201)
             return Response(serializer.errors, status=400)
         except Exception as e:
             return Response({'error': str(e)}, status=500)
+
+class EmailList(APIView):
+    def post(self,request):
+        serializer = EmailListSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save
+            return Response(serializer.data,status=200)
+        else:
+            return Response(serializer.errors,status=400)
+        
