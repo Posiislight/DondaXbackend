@@ -53,7 +53,7 @@ Submitted on: {order.created_at.strftime('%Y-%m-%d %H:%M:%S')}
                         fail_silently=False,
                     )
                 except Exception as e:
-                    print("smtp error")
+                    
                     return Response(serializer.errors,status=401)
                 return Response(serializer.data, status=201)
             return Response(serializer.errors, status=400)
