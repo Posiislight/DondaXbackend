@@ -54,9 +54,9 @@ Submitted on: {order.created_at.strftime('%Y-%m-%d %H:%M:%S')}
                     )
                 except Exception as e:
                     
-                    return Response(serializer.errors,status=401)
+                    return Response({'email error': str(e)},status=401)
                 return Response(serializer.data, status=201)
-            return Response(serializer.errors, status=400)
+            return Response(serializer.errors, status=200)
         except Exception as e:
             return Response({'error': str(e)}, status=500)
 
