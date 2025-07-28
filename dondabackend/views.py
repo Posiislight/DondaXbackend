@@ -4,7 +4,6 @@ from .models import MotorcycleOrder,EmailList
 from .serializers import MotorcycleOrderSerializer,EmailListSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
-
 from django.conf import settings
 import json
 import os
