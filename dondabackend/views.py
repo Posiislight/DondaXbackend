@@ -1,12 +1,36 @@
-from tokenize import Octnumber
+
 from django.shortcuts import render
 from .models import MotorcycleOrder,EmailList
 from .serializers import MotorcycleOrderSerializer,EmailListSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.core.mail import send_mail
+
 from django.conf import settings
 import json
+import os
+from dotenv import load_dotenv
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+
+load_dotenv()  # if using dotenv
+SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
+
+
+def send_email(to_email, subject, html_content):
+    message = Mail(
+        from_email='enquiry@dondaxlimited.com',  # Must be verified sender
+        to_emails=to_email,
+        subject=subject,
+        html_content=html_content
+    )
+    try:
+        sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
+        response = sg.send(message)
+        print(f"Email sent: {response.status_code}")
+        return True
+    except Exception as e:
+        print(f"SendGrid error: {e}")
+        return False
 
 class BookingsView(APIView):
     def post(self, request):
@@ -18,39 +42,41 @@ class BookingsView(APIView):
                 # Format additional features
                 features = json.dumps(order.additional_features, indent=2) if order.additional_features else "None"
 
-                # Construct email message
-                message = f"""
-New Motorcycle Order
 
-Customer Information:
-Name: {order.first_name} {order.last_name}
-Email: {order.email}
-Phone: {order.phone}
-Address: {order.address}
-City: {order.city}
-Zip Code: {order.zip_code}
-
-Order Details:
-Model: {order.motorcycle_model}
-Color: {order.color}
-Quantity: {order.quantity}
-Frequency: {order.frequency}
-Additional Features: {features}
-
-Submitted on: {order.created_at.strftime('%Y-%m-%d %H:%M:%S')}
-"""
 
                 # Send email
 
                 try:
                     order_count = MotorcycleOrder.objects.count()
                     order_number = order_count+1
-                    send_mail(
-                        subject=f"Order {order_number} New Motorcycle Order Received",
-                        message=message,
-                        from_email=settings.DEFAULT_FROM_EMAIL,
-                        recipient_list=["adelekeolamiposi@gmail.com"],  # or your admin/support email
-                        fail_silently=False,
+                    html_message = f"""
+                        <html>
+                        <body style="font-family: Arial, sans-serif; line-height: 1.5;">
+                        <h2>New Motorcycle Order</h2>
+                        <h3>Customer Information:</h3>
+                        <p>Name: {order.first_name} {order.last_name}<br>
+                        Email: {order.email}<br>
+                        Phone: {order.phone}<br>
+                        Address: {order.address}<br>
+                        City: {order.city}<br>
+                        Zip Code: {order.zip_code}</p>
+
+                        <h3>Order Details:</h3>
+                        <p>Model: {order.motorcycle_model}<br>
+                        Color: {order.color}<br>
+                        Quantity: {order.quantity}<br>
+                        Frequency: {order.frequency}<br>
+                        Additional Features: {features}</p>
+
+                        <p>Submitted on: {order.created_at.strftime('%Y-%m-%d %H:%M:%S')}</p>
+                </body>
+</html>
+"""
+                    send_email(
+                        to_email='enquiry@dondaxlimited.com',
+                        subject=f"Order {order_number} submitted",
+                        html_content = html_message
+
                     )
                 except Exception as e:
                     

@@ -134,12 +134,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #EMAIL SETTINGS 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'care@dondaxlimited.com'  # Brevo login email
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")        # Brevo SMTP key
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+EMAIL_HOST_USER = 'apikey'  # fixed string
+EMAIL_HOST_PASSWORD = os.environ.get("SENDGRID_API_KEY")  # your actual API key
+DEFAULT_FROM_EMAIL = 'enquiry@dondaxlimited.com'  # must be verified in SendGrid
+
 
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
