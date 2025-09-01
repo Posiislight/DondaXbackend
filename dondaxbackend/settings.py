@@ -14,6 +14,7 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 import dj_database_url
+import psycopg2
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -84,10 +85,16 @@ WSGI_APPLICATION = 'dondaxbackend.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get("DATABASE_URL")
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres.aayicjkqeqxydljzquqc',
+        'PASSWORD': os.environ.get('DATABASE_PASSWORD'),  # plain password is fine here
+        'HOST': 'aws-1-eu-north-1.pooler.supabase.com',
+        'PORT': '6543',
+    }
 }
+
 
 
 # Password validation

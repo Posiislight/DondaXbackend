@@ -10,6 +10,7 @@ import os
 from dotenv import load_dotenv
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
+from django.http import JsonResponse
 
 load_dotenv()  # if using dotenv
 SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
@@ -94,3 +95,5 @@ class EmailList(APIView):
         else:
             return Response(serializer.errors,status=400)
         
+def ping(request):
+    return JsonResponse({"status":"ok"},status=200)

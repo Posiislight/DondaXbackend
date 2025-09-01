@@ -6,5 +6,7 @@ from . import views
 
 urlpatterns = [
     path('bookings/',views.BookingsView.as_view()),
-    path('email/',views.EmailList.as_view())
+    path('email/',views.EmailList.as_view()),
+    path('ping/',views.ping)
 ]
+
